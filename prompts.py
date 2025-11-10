@@ -50,7 +50,7 @@ def PROMPT_IMPROVE_CODE(user_query, code_generated, dfs_formatted, improvement_q
 
 def PROMPT_IDEAS(dfs_formatted):
     return (
-        "List 10 prompts I could give an AI to explore the data in the sampled Dataframes, by creating a kind of chart. "
+        "List 5 prompts I could give an AI to explore the data in the sampled Dataframes, by creating a kind of chart. "
         "The prompt must be about chart creation. "
         "Make the prompt approachable and understandable for humans, though it's meant to an LLM. "
         "Add a component of interest or fun. "
@@ -59,6 +59,6 @@ def PROMPT_IDEAS(dfs_formatted):
         "The output format must be a markdowb bullet point list like this:"
         "Prompt 1: .... \n"
         "Prompt 2: .... \n"
-        "Etc \n\n"
+        "Do use code blocks/tripple tick blocks. \n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"
     )
