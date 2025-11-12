@@ -92,7 +92,58 @@ def render_local_storage_history_recovering_tool_load(chart_gen):
                 st.session_state[ORIGINAL_QUERY] = selected_history_item['history'][0]['query']
                 st.rerun()
 
+def render_copy_history(new_history_entry):
+    html_code = f"""
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap">
+        <style>
+            #copy-btn {{
+                font-family: 'Source Code Pro', monospace;
+                align-items: center;
+                appearance: button;
+                background-color: rgb(33, 46, 69);
+                border: 1px solid rgb(49, 65, 88);
+                border-radius: 8px;
+                box-sizing: border-box;
+                color: rgb(226, 232, 240);
+                cursor: pointer;
+                display: inline-flex;
+                font-size: 16px;
+                font-weight: 400;
+                height: 40px;
+                justify-content: center;
+                line-height: 25.6px;
+                margin-left: -8px;
+                min-height: 40px;
+                padding: 4px 12px;
+                text-align: center;
+                user-select: none;
+            }}
+        </style>
+        <button id="copy-btn">Copy history</button>
+
+        <script>
+        const btn = document.getElementById('copy-btn');
+        btn.addEventListener('click', async () => {{
+            try {{
+                await navigator.clipboard.writeText(JSON.stringify({json.dumps(new_history_entry)}));
+                btn.innerText = "Copied";
+                setTimeout(() => {{ btn.innerText = "Copy history"; }}, 3000);
+            }} catch (err) {{
+                console.error("Clipboard copy failed:", err);
+                btn.innerText = "Failed :(";
+            }}
+        }});
+        </script>
+    """
+
+    st.components.v1.html(html_code, height=50)
+
 def render_local_storage_recovering_tool_save(chart_gen):
+    new_history_entry = {
+        "date": datetime.datetime.now().isoformat(),
+        "history": chart_gen.history,
+    }
+    
     if st.button("Save current exploration", key="save_history_btn"):
         try:
             existing_history = st.session_state[LOCAL_STORAGE_HISTORY]
@@ -100,13 +151,7 @@ def render_local_storage_recovering_tool_save(chart_gen):
         except:
             history = []
     
-        new_history_data = {
-            "date": datetime.datetime.now().isoformat(),
-            "history": chart_gen.history,
-        }
-
-
-        history.append(new_history_data)
+        history.append(new_history_entry)
         history.sort(key=lambda x: x["date"], reverse=True)
         safe_history_json = json.dumps(history)
         escaped_json = safe_history_json.replace("\\", "\\\\").replace("'", "\\'")
@@ -117,3 +162,5 @@ def render_local_storage_recovering_tool_save(chart_gen):
         )
         st.session_state[LOCAL_STORAGE_HISTORY] = safe_history_json
         st.rerun()
+    
+    render_copy_history(new_history_entry)
