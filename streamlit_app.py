@@ -22,7 +22,8 @@ from history import (
 )
 from ui_components import (
     render_chart,
-    render_improvement_form
+    render_improvement_form,
+    render_new_exploration_from_code,
 )
 
 
@@ -100,6 +101,8 @@ def render_main() -> None:
         
         st.markdown('---')
         render_local_storage_history_recovering_tool_load(chart_gen)
+        st.markdown('---')
+        render_new_exploration_from_code(chart_gen)
         return
 
 

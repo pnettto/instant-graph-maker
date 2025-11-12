@@ -6,6 +6,7 @@ from streamlit_js_eval import streamlit_js_eval
 
 from constants import (
     ENTRY_HISTORY_INDEX,
+    IMPROVEMENT_ENTRY_INDEX,
     IMPROVEMENT_QUERY,
     LOCAL_STORAGE_HISTORY,
     ORIGINAL_QUERY,
@@ -21,11 +22,14 @@ def render_version_navigation(history, current_index) -> None:
         if st.button("Prev", disabled=current_index == 0, width='stretch', key="prev_btn"):
             st.session_state[ENTRY_HISTORY_INDEX] = current_index - 1
             st.session_state[IMPROVEMENT_QUERY] = ""
+            st.session_state[IMPROVEMENT_ENTRY_INDEX] = None
+
             st.rerun()
     with col_next:
         if st.button("Next", disabled=current_index >= len(history) - 1, width='stretch', key="next_btn"):
             st.session_state[ENTRY_HISTORY_INDEX] = current_index + 1
             st.session_state[IMPROVEMENT_QUERY] = ""
+            st.session_state[IMPROVEMENT_ENTRY_INDEX] = None
             st.rerun()
 
     current_entry = history[current_index]
@@ -119,7 +123,7 @@ def render_copy_history(new_history_entry):
                 user-select: none;
             }}
         </style>
-        <button id="copy-btn">Copy history</button>
+        <button id="copy-btn">Copy exploration</button>
 
         <script>
         const btn = document.getElementById('copy-btn');
@@ -127,7 +131,7 @@ def render_copy_history(new_history_entry):
             try {{
                 await navigator.clipboard.writeText(JSON.stringify({json.dumps(new_history_entry)}));
                 btn.innerText = "Copied";
-                setTimeout(() => {{ btn.innerText = "Copy history"; }}, 3000);
+                setTimeout(() => {{ btn.innerText = "Copy exploration"; }}, 3000);
             }} catch (err) {{
                 console.error("Clipboard copy failed:", err);
                 btn.innerText = "Failed :(";
