@@ -20,9 +20,4 @@
 - "List all employees hired after 2021."
 - "What are the top 5 products by sales?"
 
-## Files
-- `streamlit_app.py`: Main application file
-- `ui_components.py`: UI helper functions and small actions used by the app
-- `constants.py`: Shared session key constants
-- `llm.py`, `prompts.py`: Internal logic (no need to modify)
-- `files/`: Place your CSV data here
+Obs.: The question need to be related to the existing data files in the `/files` directory.
