@@ -131,7 +131,7 @@ def render_main() -> None:
                 current_entry_index = 0
             else:
                 st.error(result['error'])
-                if st.button("Reload App", width='stretch'):
+                if st.button("Reload App", width='stretch', key="reload_app_btn"):
                     st.session_state.clear()
                     st.rerun()
         case "version_selected":

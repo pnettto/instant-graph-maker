@@ -34,7 +34,7 @@ def render_chart(entry, dfs) -> None:
                 st.session_state[IMPROVEMENT_QUERY] = f"Fix this error: \n {e}"
                 st.session_state['trigger_fix_error'] = True
 
-            if st.button("Fix", width='stretch'):
+            if st.button("Fix", width='stretch', key=f"fix_error_btn_{np.random.randint(0, 1000000)}"):
                 fix_error(e)
 
             if st.session_state.get('trigger_fix_error', False):

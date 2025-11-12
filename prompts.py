@@ -8,7 +8,7 @@ def PROMPT_RELEVANT_DFS(user_query, dfs_formatted):
         "Err on the side of including more DataFrames rather than missing one. "
         "Respond ONLY with a list of DataFrame names (filenames) that are relevant "
         "Do not use markdown code block. The format should be Python code that can be used with exec(), like this: ['df_x', 'df_y']\n\n"
-        "Important: This prompt is supposed to aid on the creation of charts. If the user question does not specifically ask for something that could be used to generate a chart, respond simply: error\n\n"
+        "Important: This prompt is supposed to aid on the creation of charts. If the user question does not specifically ask for something that could be used to generate a chart, respond with \"Error: <error explanation>\"\n\n"
         f"User question: {user_query}\n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"
     )
@@ -22,7 +22,7 @@ def PROMPT_PYTHON_CODE(user_query, dfs_formatted):
         "Return only executable Python code—no explanations, comments, or markdown code blocks. "
         "Do NOT use markdown code syntax (such as triple backticks or ```python) in your response. "
         "Comment each line to explain your reasoning for the changes made but keep it very short. "
-        "If a chart cannot be created from the provided DataFrames, respond with and error explainig why not.\n\n"
+        "If a chart cannot be created from the provided DataFrames, respond with \"Error: <error explanation>\".\n\n"
         f"User question: {user_query}\n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"
     )
@@ -41,7 +41,7 @@ def PROMPT_IMPROVE_CODE(user_query, code_generated, dfs_formatted, improvement_q
         "Do NOT use markdown code syntax (such as triple backticks or ```python) in your response. "
         "Make very short comments at all lines to explain your reasoning in creating them, but never create a comment block at the start. "
         "Important: You must only respond to requests that improve the Streamlit chart code (appearance, functionality, layout, translations, or bug fixes). "
-        "If the user's request is unrelated to chart improvement, respond with: error\n\n"
+        "If the user's request is unrelated to chart improvement, respond with \"Error: <error explanation>\"\n\n"
         f"Original user query and past improvement queries (separated by /): {user_query}\n\n"
         f"Latest generated code:\n{code_generated}\n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"

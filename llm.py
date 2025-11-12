@@ -48,9 +48,9 @@ class ChartCodeGenerator:
         prompt = compose_prompt(PROMPT_RELEVANT_DFS, user_query, all_dfs_formatted_for_prompt)
         relevant_dfs_str = ask_llm(prompt)
 
-        if relevant_dfs_str == 'error':
+        if relevant_dfs_str[0:5].lower() == 'error':
             result = {
-                'error': 'The query must be about chart creation'
+                'error': relevant_dfs_str
             }
             return False, result
 
@@ -72,7 +72,6 @@ class ChartCodeGenerator:
 
         self.relevant_dfs_formatted = format_dfs_for_prompt(relevant_dfs)
         prompt = compose_prompt(PROMPT_PYTHON_CODE, user_query, self.relevant_dfs_formatted)
-        print(prompt)
 
         generated_code = ask_llm(prompt)
         # Make sure to strip any code block markings, just in case it happens
@@ -109,9 +108,9 @@ class ChartCodeGenerator:
             line for line in improved_code_str.splitlines() if not line.strip().startswith("```")
         )
 
-        if improved_code_str == 'error':
+        if improved_code_str[0:5].lower() == 'error':
             result = {
-                'error': 'The query must be about chart creation'
+                'error': improved_code_str
             }
             return False, result
         

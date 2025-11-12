@@ -18,12 +18,12 @@ from ui_components import (
 def render_version_navigation(history, current_index) -> None:
     col_prev, col_next = st.columns([1, 1])
     with col_prev:
-        if st.button("Prev", key="prev_btn", disabled=current_index == 0, width='stretch'):
+        if st.button("Prev", disabled=current_index == 0, width='stretch', key="prev_btn"):
             st.session_state[ENTRY_HISTORY_INDEX] = current_index - 1
             st.session_state[IMPROVEMENT_QUERY] = ""
             st.rerun()
     with col_next:
-        if st.button("Next", key="next_btn", disabled=current_index >= len(history) - 1, width='stretch'):
+        if st.button("Next", disabled=current_index >= len(history) - 1, width='stretch', key="next_btn"):
             st.session_state[ENTRY_HISTORY_INDEX] = current_index + 1
             st.session_state[IMPROVEMENT_QUERY] = ""
             st.rerun()
@@ -48,7 +48,7 @@ def render_chart_history(history, dfs) -> None:
             with st.expander("Show generated code", expanded=False):
                 st.code(entry["code"])
             
-            if st.button(f"Recover", key=f"recover_{i}"):
+            if st.button(f"Recover", key=f"recover_btn_{i}"):
                 st.session_state[ENTRY_HISTORY_INDEX] = i
                 st.rerun()
 
