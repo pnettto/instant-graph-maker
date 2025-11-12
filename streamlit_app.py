@@ -99,9 +99,7 @@ def render_main() -> None:
                     st.markdown('### Prompt ideas')
                     st.markdown(prompt_ideas)
         
-        st.markdown('---')
         render_local_storage_history_recovering_tool_load(chart_gen)
-        st.markdown('---')
         render_new_exploration_from_code(chart_gen)
         return
 

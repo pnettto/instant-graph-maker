@@ -79,6 +79,7 @@ def render_local_storage_history_recovering_tool_load(chart_gen):
         history = []
 
     if history:
+        st.markdown('---')
         col_l, _ = st.columns([2, 1])
         with col_l:
             st.markdown('### Load a previous exploration')

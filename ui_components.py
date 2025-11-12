@@ -70,6 +70,7 @@ def render_improvement_form(improvement_entry_index) -> None:
         st.rerun()
 
 def render_new_exploration_from_code(chart_gen) -> None:
+    st.markdown('---')
     col_l, _ = st.columns([2, 1])
     with col_l:
         st.markdown('### Load from copied exploration')
