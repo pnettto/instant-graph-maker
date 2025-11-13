@@ -1,4 +1,3 @@
-import logging
 import os
 import ast
 import time
@@ -25,22 +24,19 @@ def compose_prompt(prompt_func, *args):
     return prompt
     
 def ask_llm(prompt):
-    # Wrap LLM call with timeout and simple retry/backoff.
-    # If all retries fail, return a string starting with 'error' so callers
-    # (e.g. generate_chart_code) can handle it gracefully.
-    timeout = int(os.getenv("OPENAI_TIMEOUT", "30"))
-    max_retries = int(os.getenv("OPENAI_MAX_RETRIES", "3"))
+    # Wrap LLM call with timeout and simple retry/backoff
+    timeout = 30
+    max_retries = 2
 
     for attempt in range(1, max_retries + 1):
         try:
-            response = openai_client.chat.completions.create(
+            response = openai_client.responses.create(
                 model="gpt-4o",
-                messages=[{"role": "user", "content": prompt}],
+                input=prompt,
                 timeout=timeout,
             )
-            return response.choices[0].message.content.strip()
+            return response.output[0].content[0].text.strip()
         except Exception as e:
-            logging.exception(f"LLM request failed (attempt {attempt}/{max_retries}): %s", e)
             if attempt < max_retries:
                 # Exponential backoff with jitter
                 sleep_time = (2 ** (attempt - 1)) + (0.1 * attempt)

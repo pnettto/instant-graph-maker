@@ -47,7 +47,8 @@ def render_chart_history(history, dfs) -> None:
                 st.markdown("---")
             st.markdown(f"{'Improvement' if i > 0 else 'Original query'}: {entry['query']}")
             
-            render_chart(entry, dfs)
+            # Don't render charts in history to avoid sending massive data to browser
+            # Users can click "Recover" to see the chart
             
             with st.expander("Show generated code", expanded=False):
                 st.code(entry["code"])

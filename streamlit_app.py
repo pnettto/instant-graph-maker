@@ -4,6 +4,11 @@ import os
 import pandas as pd
 import streamlit as st
 
+# Enable vegafusion for better handling of large datasets in Altair charts
+# This processes data server-side and only sends aggregated results to the browser
+import altair as alt
+alt.data_transformers.enable("vegafusion")
+
 from llm import ChartCodeGenerator
 from constants import (
     CHART_GEN,
@@ -26,8 +31,9 @@ from ui_components import (
     render_new_exploration_from_code,
 )
 
-
+@st.cache_data
 def load_dfs():
+    """Load all CSV files from the files directory. Cached to avoid reloading on every rerun."""
     csv_folder = "./files"
     dfs = {}
     for filename in os.listdir(csv_folder):
@@ -37,10 +43,11 @@ def load_dfs():
             dfs[name] = pd.read_csv(filepath)
     return dfs
 
-# Load all available dfs
-all_dfs = load_dfs()
-
-initial_chart_gen = ChartCodeGenerator(all_dfs=all_dfs)
+@st.cache_resource
+def get_chart_generator():
+    """Create and cache the ChartCodeGenerator instance."""
+    all_dfs = load_dfs()
+    return ChartCodeGenerator(all_dfs=all_dfs)
 
 def render_main() -> None:
     st.set_page_config(page_title="Natural Chart Creator", layout="wide")
@@ -55,7 +62,7 @@ def render_main() -> None:
 
     # Initialize session variables
     if CHART_GEN not in st.session_state:
-        st.session_state[CHART_GEN] = initial_chart_gen
+        st.session_state[CHART_GEN] = get_chart_generator()
     if ENTRY_HISTORY_INDEX not in st.session_state:
         st.session_state[ENTRY_HISTORY_INDEX] = None
     if ORIGINAL_QUERY not in st.session_state:
@@ -86,15 +93,13 @@ def render_main() -> None:
                     st.session_state[ORIGINAL_QUERY] = query_input
                     st.rerun()
 
-        with col_r:
-            # Move "Get prompt ideas" button further down the page
-            st.markdown("<div style='height: 85px;'></div>", unsafe_allow_html=True)
-            if st.button("Get prompt ideas", key="prompt_ideas_btn"):
-                prompt_ideas = chart_gen.generate_prompt_ideas()
-                if prompt_ideas:
-                    st.markdown('### Prompt ideas')
-                    st.markdown(prompt_ideas)
-        
+        # Move "Get prompt ideas" button further down the page
+        if st.button("Get query ideas", key="prompt_ideas_btn"):
+            prompt_ideas = chart_gen.generate_prompt_ideas()
+            if prompt_ideas:
+                st.markdown('### Query ideas')
+                st.markdown(prompt_ideas)
+
         render_local_storage_history_recovering_tool_load(chart_gen, True)
         render_new_exploration_from_code(chart_gen)
         return
@@ -122,25 +127,27 @@ def render_main() -> None:
 
     match case:
         case "start":
-            success, result = chart_gen.generate_chart_code(st.session_state[ORIGINAL_QUERY])
+            with st.spinner("Generating chart code... This may take up to 30 seconds."):
+                success, result = chart_gen.generate_chart_code(st.session_state[ORIGINAL_QUERY])
             if success:
                 current_entry = result
                 current_entry_index = 0
             else:
-                st.error(result['error'])
-                if st.button("Reload App", width='stretch', key="reload_app_btn"):
+                st.error(f"Failed to generate chart: {result['error']}")
+                if st.button("Try Again", key="reload_app_btn"):
                     st.session_state.clear()
                     st.rerun()
         case "version_selected":
             current_entry = chart_gen.history[entry_history_index]
             current_entry_index = entry_history_index
         case "improvement":
-            success, result = chart_gen.improve_chart_code(improvement_query, improvement_entry_index)
+            with st.spinner("Improving chart code... This may take up to 30 seconds."):
+                success, result = chart_gen.improve_chart_code(improvement_query, improvement_entry_index)
             if success:
                 current_entry = result
                 current_entry_index = len(chart_gen.history) - 1
             else:
-                st.error(result['error'])
+                st.error(f"Failed to improve chart: {result['error']}")
                 current_entry = latest_entry
                 current_entry_index = len(chart_gen.history) - 1
         case "default":
