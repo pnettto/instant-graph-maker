@@ -16,8 +16,10 @@ def PROMPT_RELEVANT_DFS(user_query, dfs_formatted):
         "Respond ONLY with a list of DataFrame names (filenames) that are relevant "
         "Do not use markdown code block. The format should be Python code that can be used with exec(), like this: ['df_x', 'df_y']\n\n"
         "Important: This prompt is supposed to aid on the creation of charts. If the user question does not specifically ask for something that could be used to generate a chart, respond with \"Error: <error explanation>\"\n\n"
-        f"User question: {user_query}\n\n"
-        f"Sampled DataFrames:\n{dfs_formatted}\n\n"
+        "## User question:\n"
+        f"{user_query}\n\n"
+        "## Sampled DataFrames:\n"
+        f"{dfs_formatted}"
     )
 
 def PROMPT_PYTHON_CODE(user_query, dfs_formatted):
@@ -43,8 +45,10 @@ def PROMPT_PYTHON_CODE(user_query, dfs_formatted):
         "- Combine multiple relevant columns if needed (e.g., sum 'Groceries' + 'Dining & Entertainment' for total food spending).\n"
         "- Only respond with an error if there is truly NO data that could reasonably answer the question.\n"
         "\n"
-        f"User question: {user_query}\n\n"
-        f"Sampled DataFrames:\n{dfs_formatted}\n\n"
+        "## User question: \n"
+        f"{user_query}\n\n"
+        "## Sampled DataFrames:\n"
+        f"{dfs_formatted}"
     )
 
 def PROMPT_IMPROVE_CODE(user_query, code_generated, dfs_formatted, improvement_query):
@@ -75,10 +79,14 @@ def PROMPT_IMPROVE_CODE(user_query, code_generated, dfs_formatted, improvement_q
         "Make very short comments at all lines to explain your reasoning in creating them, but never create a comment block at the start. "
         "Important: You must only respond to requests that iterate the Streamlit chart code (appearance, functionality, layout, translations, or bug fixes). "
         "If the user's request is unrelated to chart iteration, respond with \"Error: <error explanation>\"\n\n"
-        f"Original user query and past iterations queries (separated by /): {user_query}\n\n"
-        f"Latest generated code:\n{code_generated}\n\n"
-        f"Sampled DataFrames:\n{dfs_formatted}\n\n"
-        f"User iteration request: {improvement_query}\n\n"
+        f"## Original user query and past iterations queries (separated by /):\n"
+        f"{user_query}\n\n"
+        "## Latest generated code:\n"
+        f"```{code_generated}```\n\n"
+        "## Sampled DataFrames:\n"
+        f"{dfs_formatted}\n\n"
+        "## User iteration request:"
+        f"{improvement_query}"
     )
     return prompt
 

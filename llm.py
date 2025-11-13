@@ -16,7 +16,7 @@ def format_dfs_for_prompt(dfs):
     formatted = []
     for name, df in dfs.items():
         sample_size = min(5, len(df))
-        formatted.append(f"DataFrame: {name}\n{df.sample(sample_size).to_csv(index=False, header=True, lineterminator='; ')}\n")
+        formatted.append(f"### DataFrame: {name}\n{df.sample(sample_size).to_csv(index=False, header=True, lineterminator='; ')}\n")
     return "\n".join(formatted)
 
 def compose_prompt(prompt_func, *args):
