@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
+from streamlit_js_eval import streamlit_js_eval
 
 # Enable vegafusion for better handling of large datasets in Altair charts
 # This processes data server-side and only sends aggregated results to the browser
@@ -47,18 +47,16 @@ def load_dfs():
 def render_main() -> None:
     st.set_page_config(page_title="Natural Chart Creator", layout="wide")
     
-    # Inject Smartlook analytics script
+    # Smartlook analytics script
     smartlook_script = """
-    <script type='text/javascript'>
-      window.smartlook||(function(d) {
-        var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
-        var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
-        c.charset='utf-8';c.src='https://web-sdk.smartlook.com/recorder.js';h.appendChild(c);
-        })(document);
-        smartlook('init', '64139ba8874f635b8cf5d737da0ac62574c1f747', { region: 'eu' });
-    </script>
+    window.smartlook||(function(d) {
+    var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+    var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+    c.charset='utf-8';c.src='https://web-sdk.smartlook.com/recorder.js';h.appendChild(c);
+    })(document);
+    smartlook('init', '64139ba8874f635b8cf5d737da0ac62574c1f747', { region: 'eu' });
     """
-    components.html(smartlook_script, height=0)
+    streamlit_js_eval(js_expressions=smartlook_script)
     
     st.title("Natural Chart Creator")
     st.markdown("""
