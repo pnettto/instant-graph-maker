@@ -78,17 +78,13 @@ def render_main() -> None:
         col_l, col_r = st.columns([2, 1])
         with col_l:
             # Initial query form
-            def execute_original_query():
-                st.session_state[ORIGINAL_QUERY] = st.session_state['query_value']
-                st.session_state['trigger_execute_original_query'] = True
-
-            st.text_input("Enter your query", key='query_value')
-            if st.button("Submit", width='stretch', key="query_btn"):
-                execute_original_query()
-
-            if st.session_state.get('trigger_execute_original_query', False):
-                st.session_state['trigger_execute_original_query'] = False
-                st.rerun()
+            with st.form(key='query_form'):
+                query_input = st.text_input("Enter your query", key='query_value')
+                submit_button = st.form_submit_button("Submit", use_container_width=True)
+                
+                if submit_button and query_input:
+                    st.session_state[ORIGINAL_QUERY] = query_input
+                    st.rerun()
 
         with col_r:
             # Move "Get prompt ideas" button further down the page

@@ -46,23 +46,19 @@ def render_chart(entry, dfs) -> None:
 
 
 def render_improvement_form(improvement_entry_index) -> None:
-    def request_improvement():
-        st.session_state[IMPROVEMENT_QUERY] = st.session_state['current_improvement_query_value']
-        st.session_state[IMPROVEMENT_ENTRY_INDEX] = improvement_entry_index
-        st.session_state[ENTRY_HISTORY_INDEX] = None
-        st.session_state['trigger_request_improvement'] = True
-
-    st.text_area(
-        "Ask for an improvement", 
-        key='current_improvement_query_value',
-        height=200
-    )
-    if st.button("Submit", width='stretch', key="current_improvement_query_btn"):
-        request_improvement()
-
-    if st.session_state.get('trigger_request_improvement', False):
-        st.session_state['trigger_request_improvement'] = False 
-        st.rerun()
+    with st.form(key='improvement_form'):
+        improvement_input = st.text_area(
+            "Ask for an improvement", 
+            key='current_improvement_query_value',
+            height=200
+        )
+        submit_button = st.form_submit_button("Submit", use_container_width=True)
+        
+        if submit_button and improvement_input:
+            st.session_state[IMPROVEMENT_QUERY] = improvement_input
+            st.session_state[IMPROVEMENT_ENTRY_INDEX] = improvement_entry_index
+            st.session_state[ENTRY_HISTORY_INDEX] = None
+            st.rerun()
 
 def render_new_exploration_from_code(chart_gen) -> None:
     st.markdown('---')
