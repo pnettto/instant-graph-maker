@@ -77,7 +77,7 @@ def render_main() -> None:
 
     # Start the app by collecting a query
     if not st.session_state[ORIGINAL_QUERY]:
-        col_l, _, col_r = st.columns([17, 1, 12])
+        col_l, _, col_r = st.columns([20, 1, 10])
         with col_l:
             # Initial query form
             with st.form(key='query_form'):
@@ -96,7 +96,7 @@ def render_main() -> None:
                     st.markdown(prompt_ideas)
         
         with col_r:
-            render_local_storage_history_recovering_tool_load(chart_gen)
+            render_local_storage_history_recovering_tool_load(chart_gen, True)
             render_new_exploration_from_code(chart_gen)
 
         return

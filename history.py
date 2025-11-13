@@ -79,24 +79,23 @@ def render_local_storage_history_recovering_tool_load(chart_gen, separator=False
         history = []
 
     if history:
+        st.markdown('### Load a previous exploration')
+        selected_index = st.selectbox(
+            label="Select",
+            options=list(range(len(history))),
+            format_func=lambda idx: (
+                f"{datetime.datetime.fromisoformat(history[idx]['date']).strftime('%Y-%m-%d@%H:%M')}: "
+                f"{history[idx]['history'][0]['query']}"
+            ),
+        )
+        if st.button("Load", key="load_history_btn"):
+            selected_history_item = history[selected_index]
+            chart_gen.history = selected_history_item['history']
+            st.session_state[ORIGINAL_QUERY] = selected_history_item['history'][0]['query']
+            st.rerun()
+            
         if separator:
             st.markdown('---')
-        col_l, _ = st.columns([2, 1])
-        with col_l:
-            st.markdown('### Load a previous exploration')
-            selected_index = st.selectbox(
-                label="Select",
-                options=list(range(len(history))),
-                format_func=lambda idx: (
-                    f"{datetime.datetime.fromisoformat(history[idx]['date']).strftime('%Y-%m-%d@%H:%M')}: "
-                    f"{history[idx]['history'][0]['query']}"
-                ),
-            )
-            if st.button("Load", key="load_history_btn"):
-                selected_history_item = history[selected_index]
-                chart_gen.history = selected_history_item['history']
-                st.session_state[ORIGINAL_QUERY] = selected_history_item['history'][0]['query']
-                st.rerun()
 
 def render_copy_history(new_history_entry):
     html_code = f"""
