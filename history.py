@@ -66,7 +66,7 @@ def sync_local_storage_history_to_session():
     else:
         st.session_state[LOCAL_STORAGE_HISTORY] = result
 
-def render_local_storage_history_recovering_tool_load(chart_gen):
+def render_local_storage_history_recovering_tool_load(chart_gen, separator=False):
     # Load histories from localStorage
     existing_history = st.session_state[LOCAL_STORAGE_HISTORY]
     if existing_history:
@@ -79,7 +79,8 @@ def render_local_storage_history_recovering_tool_load(chart_gen):
         history = []
 
     if history:
-        st.markdown('---')
+        if separator:
+            st.markdown('---')
         col_l, _ = st.columns([2, 1])
         with col_l:
             st.markdown('### Load a previous exploration')
