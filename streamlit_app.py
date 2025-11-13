@@ -82,7 +82,7 @@ def render_main() -> None:
 
     # Start the app by collecting a query
     if not st.session_state[ORIGINAL_QUERY]:
-        col_l, col_r = st.columns([2, 1])
+        col_l, _, col_r = st.columns([17, 1, 12])
         with col_l:
             # Initial query form
             with st.form(key='query_form'):
@@ -93,15 +93,17 @@ def render_main() -> None:
                     st.session_state[ORIGINAL_QUERY] = query_input
                     st.rerun()
 
-        # Move "Get prompt ideas" button further down the page
-        if st.button("Get query ideas", key="prompt_ideas_btn"):
-            prompt_ideas = chart_gen.generate_prompt_ideas()
-            if prompt_ideas:
-                st.markdown('### Query ideas')
-                st.markdown(prompt_ideas)
+            # Move "Get prompt ideas" button further down the page
+            if st.button("Get query ideas", key="prompt_ideas_btn"):
+                prompt_ideas = chart_gen.generate_prompt_ideas()
+                if prompt_ideas:
+                    st.markdown('### Query ideas')
+                    st.markdown(prompt_ideas)
+        
+        with col_r:
+            render_local_storage_history_recovering_tool_load(chart_gen)
+            render_new_exploration_from_code(chart_gen)
 
-        render_local_storage_history_recovering_tool_load(chart_gen, True)
-        render_new_exploration_from_code(chart_gen)
         return
 
 
