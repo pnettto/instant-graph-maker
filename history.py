@@ -58,8 +58,8 @@ def render_chart_history(history, dfs) -> None:
 
 def sync_local_storage_history_to_session():
     result = streamlit_js_eval(
-        js_expressions="localStorage.getItem('chart_histories')",
-        key="get_chart_histories"
+        js_expressions="localStorage.getItem('chart_history')",
+        key="get_chart_history"
     )
     if result is None:
         st.session_state[LOCAL_STORAGE_HISTORY] = None
@@ -73,7 +73,7 @@ def render_local_storage_history_recovering_tool_load(chart_gen, separator=False
         try:
             history = json.loads(existing_history)
         except Exception as e:
-            st.error(f"Error parsing chart_histories: {e}")
+            st.error(f"Error parsing chart_history: {e}")
             history = []
     else:
         history = []
@@ -93,7 +93,7 @@ def render_local_storage_history_recovering_tool_load(chart_gen, separator=False
             chart_gen.history = selected_history_item['history']
             st.session_state[ORIGINAL_QUERY] = selected_history_item['history'][0]['query']
             st.rerun()
-            
+
         if separator:
             st.markdown('---')
 
@@ -159,13 +159,20 @@ def render_local_storage_recovering_tool_save(chart_gen):
         history.append(new_history_entry)
         history.sort(key=lambda x: x["date"], reverse=True)
         safe_history_json = json.dumps(history)
-        escaped_json = safe_history_json.replace("\\", "\\\\").replace("'", "\\'")
-        st.success("Saved")
-        streamlit_js_eval(
-            js_expressions=f"localStorage.setItem('chart_histories', '{escaped_json}')",
-            key="set_chart_histories"
-        )
+        
         st.session_state[LOCAL_STORAGE_HISTORY] = safe_history_json
-        st.rerun()
+        
+        # Use HTML component to save to localStorage (without rerun)
+        save_html = f"""
+        <script>
+        (function() {{
+            const data = {safe_history_json};
+            localStorage.setItem('chart_history', JSON.stringify(data));
+            console.log('Saved to localStorage');
+        }})();
+        </script>
+        """
+        st.components.v1.html(save_html, height=0)
+        st.success("Saved")
     
     render_copy_history(new_history_entry)
