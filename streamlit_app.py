@@ -43,12 +43,6 @@ def load_dfs():
             dfs[name] = pd.read_csv(filepath)
     return dfs
 
-@st.cache_resource
-def get_chart_generator():
-    """Create and cache the ChartCodeGenerator instance."""
-    all_dfs = load_dfs()
-    return ChartCodeGenerator(all_dfs=all_dfs)
-
 def render_main() -> None:
     st.set_page_config(page_title="Natural Chart Creator", layout="wide")
     st.title("Natural Chart Creator")
@@ -62,7 +56,8 @@ def render_main() -> None:
 
     # Initialize session variables
     if CHART_GEN not in st.session_state:
-        st.session_state[CHART_GEN] = get_chart_generator()
+        all_dfs = load_dfs()
+        st.session_state[CHART_GEN] = ChartCodeGenerator(all_dfs=all_dfs)
     if ENTRY_HISTORY_INDEX not in st.session_state:
         st.session_state[ENTRY_HISTORY_INDEX] = None
     if ORIGINAL_QUERY not in st.session_state:
