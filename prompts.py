@@ -99,7 +99,7 @@ def PROMPT_IDEAS(dfs_formatted):
         "Format your response as a markdown bullet list with one sentence per prompt. "
         "Use this exact format:\n"
         "- Prompt 1: ...\n"
-        "- Prompt 2: ...\n"
+        "- Prompt 2: ...\n\n"
         "Do NOT use code blocks or triple backticks.\n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"
     )
