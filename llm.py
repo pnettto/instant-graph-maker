@@ -1,6 +1,7 @@
 import logging
 import os
 import ast
+import time
 from openai import OpenAI
 from dotenv import load_dotenv
 from prompts import PROMPT_RELEVANT_DFS, PROMPT_PYTHON_CODE, PROMPT_IMPROVE_CODE, PROMPT_IDEAS
@@ -24,11 +25,29 @@ def compose_prompt(prompt_func, *args):
     return prompt
     
 def ask_llm(prompt):
-    response = openai_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content.strip()
+    # Wrap LLM call with timeout and simple retry/backoff.
+    # If all retries fail, return a string starting with 'error' so callers
+    # (e.g. generate_chart_code) can handle it gracefully.
+    timeout = int(os.getenv("OPENAI_TIMEOUT", "30"))
+    max_retries = int(os.getenv("OPENAI_MAX_RETRIES", "3"))
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": prompt}],
+                timeout=timeout,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            logging.exception(f"LLM request failed (attempt {attempt}/{max_retries}): %s", e)
+            if attempt < max_retries:
+                # Exponential backoff with jitter
+                sleep_time = (2 ** (attempt - 1)) + (0.1 * attempt)
+                time.sleep(sleep_time)
+                continue
+            # Final failure: return error string for upstream handling
+            return f"error: {type(e).__name__}: {str(e)}"
 
 
 class ChartCodeGenerator:

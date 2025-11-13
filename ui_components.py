@@ -46,20 +46,15 @@ def render_chart(entry, dfs) -> None:
 
 
 def render_improvement_form(improvement_entry_index) -> None:
-    if 'improvement_text' not in st.session_state:
-        st.session_state['improvement_text'] = ''
-    
     def request_improvement():
         st.session_state[IMPROVEMENT_QUERY] = st.session_state['current_improvement_query_value']
         st.session_state[IMPROVEMENT_ENTRY_INDEX] = improvement_entry_index
         st.session_state[ENTRY_HISTORY_INDEX] = None
-        st.session_state['improvement_text'] = ''
         st.session_state['trigger_request_improvement'] = True
 
     st.text_area(
         "Ask for an improvement", 
         key='current_improvement_query_value',
-        value=st.session_state['improvement_text'],
         height=200
     )
     if st.button("Submit", width='stretch', key="current_improvement_query_btn"):
