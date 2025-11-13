@@ -81,14 +81,14 @@ def PROMPT_IMPROVE_CODE(user_query, code_generated, dfs_formatted, improvement_q
         "If the user's request is unrelated to chart iteration, respond with \"Error: <error explanation>\"\n\n"
         f"## Original user query and past iterations queries (separated by /):\n"
         f"{user_query}\n\n"
-        "## Latest generated code:\n"
-        "```\n"
-        f"{code_generated}\n"
-        "```\n\n"
         "## Sampled DataFrames:\n"
         f"{dfs_formatted}\n\n"
         "## User iteration request:"
         f"{improvement_query}"
+        "## Latest generated code:\n"
+        "```\n"
+        f"{code_generated}\n"
+        "```\n\n"
     )
     return prompt
 
