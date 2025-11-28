@@ -52,7 +52,7 @@ def render_improvement_form(improvement_entry_index) -> None:
             key='current_improvement_query_value',
             height=200
         )
-        submit_button = st.form_submit_button("Submit", use_container_width=True)
+        submit_button = st.form_submit_button("Improve chart", use_container_width=True)
         
         if submit_button and improvement_input:
             st.session_state[IMPROVEMENT_QUERY] = improvement_input
@@ -61,7 +61,7 @@ def render_improvement_form(improvement_entry_index) -> None:
             st.rerun()
 
 def render_new_exploration_from_code(chart_gen) -> None:
-    st.markdown('### Load from copied exploration')
+    st.markdown('### Create from copied exploration')
     
     def load_exploration():
         try:

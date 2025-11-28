@@ -27,6 +27,7 @@ def PROMPT_PYTHON_CODE(user_query, dfs_formatted):
         "Given several sampled DataFrames from CSV files, your task is to generate ONLY the Python code to create a Streamlit chart that answers the user's question. "
         "Each DataFrame is loaded as dfs['dataframe_name'], so never use the dataframe name directly, always use it as a key of the dfs dict."
         "pandas (pd), numpy (np), Streamlit (st), Altair (alt) and prophet (prophet) are available. DO NOT add imports for them or anything else. "
+        "For timeseries charts, always format x-axis labels (dates/times) for maximum human readability, using rotation or formatting as needed to avoid overlap. "
         "You must always create charts using st.altair_chart. Any kind of Altair chart (bar, line, scatter, etc.) may be used as appropriate. "
         "Return only executable Python code—no explanations, comments, or markdown code blocks. "
         "Do NOT use markdown code syntax (such as triple backticks or ```python) in your response. "
@@ -99,8 +100,8 @@ def PROMPT_IDEAS(dfs_formatted):
         "The suggested prompts should be both udnerstandable by humans and LLMs. "
         "Format your response as a markdown bullet list with one sentence per prompt. "
         "Use this exact format:\n"
-        "- Prompt 1: ...\n"
-        "- Prompt 2: ...\n\n"
+        "- Idea 1: ...\n"
+        "- Idea 2: ...\n\n"
         "Do NOT use code blocks or triple backticks.\n\n"
         f"Sampled DataFrames:\n{dfs_formatted}\n\n"
     )

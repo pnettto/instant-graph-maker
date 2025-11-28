@@ -45,20 +45,9 @@ def load_dfs():
     return dfs
 
 def render_main() -> None:
-    st.set_page_config(page_title="Natural Chart Creator", layout="wide")
+    st.set_page_config(page_title="Instant Graph Maker", layout="wide")
     
-    # Smartlook analytics script
-    smartlook_script = """
-    window.smartlook||(function(d) {
-    var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
-    var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
-    c.charset='utf-8';c.src='https://web-sdk.smartlook.com/recorder.js';h.appendChild(c);
-    })(document);
-    smartlook('init', '64139ba8874f635b8cf5d737da0ac62574c1f747', { region: 'eu' });
-    """
-    streamlit_js_eval(js_expressions=smartlook_script)
-    
-    st.title("Natural Chart Creator")
+    st.title("Instant Graph Maker")
     st.markdown("""
     <style>
     .stMainBlockContainer {
@@ -92,20 +81,25 @@ def render_main() -> None:
     if not st.session_state[ORIGINAL_QUERY]:
         col_l, _, col_r = st.columns([20, 1, 10])
         with col_l:
+            st.text("Create charts by simply describing what you want to see. The tool automatically selects the right data and suggests a chart, which you can customize further.")
+            st.text("For this demo, we have a personal spending dataset (e.g., transportation, gym) and a Fitbit dataset.")
+            st.text("Need ideas? Click the 'Suggest tasks' button below to get started.")
+            st.text("""Built with Streamlit and powered by OpenAI’s LLM.
+Created by Pedro Netto (pnettto.github.io)""")
             # Initial query form
             with st.form(key='query_form'):
-                query_input = st.text_input("Enter your query", key='query_value')
-                submit_button = st.form_submit_button("Submit", use_container_width=True)
+                query_input = st.text_input("Describe the chart you want", key='query_value')
+                submit_button = st.form_submit_button("Create Chart", use_container_width=True)
                 
                 if submit_button and query_input:
                     st.session_state[ORIGINAL_QUERY] = query_input
                     st.rerun()
 
             # Move "Get prompt ideas" button further down the page
-            if st.button("Get query ideas", key="prompt_ideas_btn"):
+            if st.button("Suggest tasks", key="prompt_ideas_btn"):
                 prompt_ideas = chart_gen.generate_prompt_ideas()
                 if prompt_ideas:
-                    st.markdown('### Query ideas')
+                    st.markdown('### Suggested tasks')
                     st.markdown(prompt_ideas)
         
         with col_r:
@@ -116,7 +110,7 @@ def render_main() -> None:
 
 
     # Show original query at top
-    (f"Original query: {st.session_state[ORIGINAL_QUERY]}")
+    (f"Original task: {st.session_state[ORIGINAL_QUERY]}")
 
     # Other control variables
     history_count = len(chart_gen.history)

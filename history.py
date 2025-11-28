@@ -40,7 +40,7 @@ def render_chart_history(history, dfs) -> None:
         return
     
     st.write('---')
-    st.write('### History')
+    st.write('### Improvement History')
     with st.expander("Show", expanded=False):
         for i, entry in enumerate(history):
             if i > 0:
@@ -79,7 +79,7 @@ def render_local_storage_history_recovering_tool_load(chart_gen, separator=False
         history = []
 
     if history:
-        st.markdown('### Load a previous exploration')
+        st.markdown('### Open a previous exploration')
         selected_index = st.selectbox(
             label="Select",
             options=list(range(len(history))),
