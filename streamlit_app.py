@@ -47,7 +47,9 @@ def load_dfs():
 def render_main() -> None:
     st.set_page_config(page_title="Instant Graph Maker", layout="wide")
     
-    st.title("Instant Graph Maker")
+    col_logo, _ = st.columns([5, 5])
+    with col_logo:
+        st.image("images/logo.png", use_container_width=True)
     st.markdown("""
     <style>
     .stMainBlockContainer {
