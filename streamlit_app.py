@@ -126,13 +126,13 @@ Created by Pedro Netto (pnettto.github.io)""")
 
     match case:
         case "start":
-            with st.spinner("Generating chart code... This may take up to 30 seconds."):
+            with st.spinner("Preparing your chart… it should be ready in less than 30 seconds."):
                 success, result = chart_gen.generate_chart_code(st.session_state[ORIGINAL_QUERY])
             if success:
                 current_entry = result
                 current_entry_index = 0
             else:
-                st.error(f"Failed to generate chart: {result['error']}")
+                st.error(f"The chart couldn’t be generated: {result['error']}")
                 if st.button("Try Again", key="reload_app_btn"):
                     st.session_state.clear()
                     st.rerun()
@@ -140,13 +140,13 @@ Created by Pedro Netto (pnettto.github.io)""")
             current_entry = chart_gen.history[entry_history_index]
             current_entry_index = entry_history_index
         case "improvement":
-            with st.spinner("Improving chart code... This may take up to 30 seconds."):
+            with st.spinner("Refining your chart… it should be ready in less than 30 seconds."):
                 success, result = chart_gen.improve_chart_code(improvement_query, improvement_entry_index)
             if success:
                 current_entry = result
                 current_entry_index = len(chart_gen.history) - 1
             else:
-                st.error(f"Failed to improve chart: {result['error']}")
+                st.error(f"The chart couldn’t be refined: {result['error']}")
                 current_entry = latest_entry
                 current_entry_index = len(chart_gen.history) - 1
         case "default":

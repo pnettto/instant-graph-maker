@@ -73,7 +73,7 @@ def render_new_exploration_from_code(chart_gen) -> None:
             exploration_data = json.loads(pasted_data)
             
             if 'history' not in exploration_data:
-                st.error("Invalid exploration format: missing 'history' field")
+                st.error("The exploration data isn’t in a valid format: missing 'history' field")
                 return
             
             chart_gen.history = exploration_data['history']
@@ -89,7 +89,7 @@ def render_new_exploration_from_code(chart_gen) -> None:
         except json.JSONDecodeError as e:
             st.error(f"Invalid JSON format: {e}")
         except Exception as e:
-            st.error(f"Error loading exploration: {e}")
+            st.error(f"There was an error loading the exploration: {e}")
     
     st.text_area(
         "Paste exploration data here",

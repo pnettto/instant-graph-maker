@@ -73,7 +73,7 @@ def render_local_storage_history_recovering_tool_load(chart_gen, separator=False
         try:
             history = json.loads(existing_history)
         except Exception as e:
-            st.error(f"Error parsing chart_history: {e}")
+            st.error(f"Couldn’t read the chart history: {e}")
             history = []
     else:
         history = []
