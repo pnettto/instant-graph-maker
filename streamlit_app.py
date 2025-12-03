@@ -45,19 +45,6 @@ def load_dfs():
     return dfs
 
 def render_main() -> None:
-    st.set_page_config(page_title="Instant Graph Maker", layout="wide")
-    
-    col_logo, _ = st.columns([5, 5])
-    with col_logo:
-        st.image("images/logo.png", use_container_width=True)
-    st.markdown("""
-    <style>
-    .stMainBlockContainer {
-        padding: 3rem;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
     # Initialize session variables
     if CHART_GEN not in st.session_state:
         all_dfs = load_dfs()
@@ -77,6 +64,12 @@ def render_main() -> None:
     entry_history_index = st.session_state[ENTRY_HISTORY_INDEX] # Selected from navigation and history
     improvement_entry_index = st.session_state[IMPROVEMENT_ENTRY_INDEX]
     improvement_query = st.session_state[IMPROVEMENT_QUERY]
+
+    st.set_page_config(page_title="Instant Graph Maker", layout="wide")
+    
+    col_logo, _ = st.columns(2)
+    with col_logo:
+        st.image("images/logo.png", use_container_width=True)
 
 
     # Start the app by collecting a query
